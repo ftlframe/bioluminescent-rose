@@ -65,7 +65,7 @@ The installer will:
    workspace 1 output eDP-1
    ```
 
-2. **Wallpaper** — place an image at `~/Pictures/wallpapers/flower.jpg`
+2. **Wallpaper** — bundled and auto-placed at `~/Pictures/wallpapers/flower.jpg`
 
 3. **Neovim** — the installer only drops the theme files. You need LazyVim installed separately. The colorscheme plugin expects `rose-pine` as the base with custom highlight overrides from `lua/theme/`.
 

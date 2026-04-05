@@ -164,6 +164,15 @@ fi
 # Ensure scripts are executable
 chmod +x "$HOME/.config/sway/keybinds.sh" "$HOME/.config/sway/volume-up.sh" 2>/dev/null
 
+# --- Wallpaper ---
+if [ -f "$SCRIPT_DIR/wallpaper.jpg" ]; then
+    echo ""
+    echo "=== Installing wallpaper ==="
+    mkdir -p "$HOME/Pictures/wallpapers"
+    cp "$SCRIPT_DIR/wallpaper.jpg" "$HOME/Pictures/wallpapers/flower.jpg"
+    echo "  Installed wallpaper"
+fi
+
 # --- Set fish as default shell ---
 if command -v fish &>/dev/null; then
     FISH_PATH="$(command -v fish)"
