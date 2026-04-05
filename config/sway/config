@@ -60,7 +60,7 @@ client.placeholder      #191724  #000000  #e0def4  #191724  #191724
 
 ### Output
 output * bg "$HOME/Pictures/wallpapers/flower.jpg" fill
-include ~/.config/sway/displays.conf
+include ~/.config/sway/displays.conf*
 
 # Focus workspace 1 on startup
 exec swaymsg workspace 1

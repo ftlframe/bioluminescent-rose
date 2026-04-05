@@ -3,6 +3,7 @@ set -euo pipefail
 
 # Bioluminescent Rose — Sway rice installer
 # Usage: ./dotfiles.sh
+# Skips packages and configs that already exist.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.config/backup-pre-biorose-$(date +%Y-%m-%d)"
@@ -22,27 +23,42 @@ fi
 
 echo "Detected package manager: $PKG_MGR"
 
+# --- Helper: check if a package is installed ---
+pkg_installed() {
+    if [ "$PKG_MGR" = "apt" ]; then
+        dpkg -s "$1" &>/dev/null
+    elif [ "$PKG_MGR" = "dnf" ]; then
+        rpm -q "$1" &>/dev/null
+    fi
+}
+
 # --- Install packages ---
 echo ""
 echo "=== Installing packages ==="
 
 if [ "$PKG_MGR" = "apt" ]; then
-    sudo apt update
-    sudo apt install -y \
-        sway sway-notification-center swaylock swayidle \
-        waybar \
-        rofi \
-        wlogout \
-        fish \
-        tmux \
-        playerctl \
-        pavucontrol \
-        grim slurp wl-clipboard \
-        eza \
-        jq \
-        blueman \
-        network-manager-gnome \
-        flameshot
+    PKGS=(
+        sway sway-notification-center swaylock swayidle
+        waybar rofi wlogout fish tmux
+        playerctl pavucontrol
+        grim slurp wl-clipboard
+        eza jq blueman network-manager-gnome flameshot
+    )
+
+    MISSING=()
+    for pkg in "${PKGS[@]}"; do
+        if ! pkg_installed "$pkg"; then
+            MISSING+=("$pkg")
+        fi
+    done
+
+    if [ ${#MISSING[@]} -gt 0 ]; then
+        echo "  Installing: ${MISSING[*]}"
+        sudo apt update
+        sudo apt install -y "${MISSING[@]}"
+    else
+        echo "  All packages already installed, skipping"
+    fi
 
     # autotiling — Python package, not in apt
     if ! command -v autotiling &>/dev/null; then
@@ -53,57 +69,58 @@ if [ "$PKG_MGR" = "apt" ]; then
         fi
     fi
 
-    # clipse — not in Ubuntu repos, install from GitHub release
+    # clipse — not in Ubuntu repos
     if ! command -v clipse &>/dev/null; then
-        echo ""
         echo "NOTE: clipse is not in Ubuntu repos."
         echo "Install from: https://github.com/savedra1/clipse/releases"
-        echo ""
     fi
 
     # Ghostty
     if ! command -v ghostty &>/dev/null; then
-        echo ""
         echo "NOTE: Ghostty is not in Ubuntu repos."
         echo "Install from: https://ghostty.org/download"
-        echo ""
     fi
 
 elif [ "$PKG_MGR" = "dnf" ]; then
-    sudo dnf install -y \
-        sway swaync swaylock swayidle \
-        waybar \
-        rofi \
-        wlogout \
-        fish \
-        tmux \
-        playerctl \
-        pavucontrol \
-        grim slurp wl-clipboard \
-        eza \
-        jq \
-        blueman \
-        NetworkManager-tui \
-        flameshot
+    PKGS=(
+        sway swaync swaylock swayidle
+        waybar rofi wlogout fish tmux
+        playerctl pavucontrol
+        grim slurp wl-clipboard
+        eza jq blueman NetworkManager-tui flameshot
+    )
 
-    # autotiling
+    MISSING=()
+    for pkg in "${PKGS[@]}"; do
+        if ! pkg_installed "$pkg"; then
+            MISSING+=("$pkg")
+        fi
+    done
+
+    if [ ${#MISSING[@]} -gt 0 ]; then
+        echo "  Installing: ${MISSING[*]}"
+        sudo dnf install -y "${MISSING[@]}"
+    else
+        echo "  All packages already installed, skipping"
+    fi
+
     if ! command -v autotiling &>/dev/null; then
         echo "NOTE: Install autotiling via pip: pip install autotiling"
     fi
 
-    # clipse
     if ! command -v clipse &>/dev/null; then
         echo "NOTE: Install clipse from: https://github.com/savedra1/clipse/releases"
     fi
 
-    # Ghostty
     if ! command -v ghostty &>/dev/null; then
         echo "NOTE: Install ghostty separately (COPR or from source)."
     fi
 fi
 
 # --- Fonts ---
-if ! fc-list | grep -qi "JetBrainsMono Nerd"; then
+if fc-list | grep -qi "JetBrainsMono Nerd"; then
+    echo "  Fonts already installed, skipping"
+else
     echo ""
     echo "=== Installing JetBrains Mono Nerd Font ==="
     mkdir -p ~/.local/share/fonts
@@ -113,7 +130,9 @@ if ! fc-list | grep -qi "JetBrainsMono Nerd"; then
 fi
 
 # --- Starship ---
-if ! command -v starship &>/dev/null; then
+if command -v starship &>/dev/null; then
+    echo "  Starship already installed, skipping"
+else
     echo ""
     echo "=== Installing starship ==="
     sudo install -m 755 "$SCRIPT_DIR/bin/starship" /usr/local/bin/starship
@@ -123,15 +142,24 @@ fi
 # --- Backup existing configs ---
 echo ""
 echo "=== Backing up existing configs to $BACKUP_DIR ==="
-mkdir -p "$BACKUP_DIR"
 
+BACKED_UP=0
 for dir in sway waybar rofi swaync fish ghostty tmux clipse; do
     if [ -d "$HOME/.config/$dir" ]; then
+        mkdir -p "$BACKUP_DIR"
         cp -r "$HOME/.config/$dir" "$BACKUP_DIR/"
         echo "  Backed up $dir"
+        BACKED_UP=1
     fi
 done
-[ -f "$HOME/.config/starship.toml" ] && cp "$HOME/.config/starship.toml" "$BACKUP_DIR/"
+if [ -f "$HOME/.config/starship.toml" ]; then
+    mkdir -p "$BACKUP_DIR"
+    cp "$HOME/.config/starship.toml" "$BACKUP_DIR/"
+    BACKED_UP=1
+fi
+if [ "$BACKED_UP" -eq 0 ]; then
+    echo "  Nothing to back up"
+fi
 
 # --- Copy configs ---
 echo ""
@@ -162,10 +190,12 @@ if [ -d "$SCRIPT_DIR/config/nvim" ]; then
 fi
 
 # Ensure scripts are executable
-chmod +x "$HOME/.config/sway/keybinds.sh" "$HOME/.config/sway/volume-up.sh" 2>/dev/null
+chmod +x "$HOME/.config/sway/keybinds.sh" "$HOME/.config/sway/volume-up.sh" "$HOME/.config/waybar/mediaplayer.sh" 2>/dev/null
 
 # --- Wallpaper ---
-if [ -f "$SCRIPT_DIR/wallpaper.jpg" ]; then
+if [ -f "$HOME/Pictures/wallpapers/flower.jpg" ]; then
+    echo "  Wallpaper already exists, skipping"
+elif [ -f "$SCRIPT_DIR/wallpaper.jpg" ]; then
     echo ""
     echo "=== Installing wallpaper ==="
     mkdir -p "$HOME/Pictures/wallpapers"
@@ -195,7 +225,6 @@ echo "=== Done! ==="
 echo ""
 echo "Next steps:"
 echo "  1. Edit ~/.config/sway/displays.conf for your monitor setup"
-echo "  2. Place a wallpaper at ~/Pictures/wallpapers/flower.jpg"
-echo "  3. Log out and select 'Sway' from your display manager"
+echo "  2. Log out and select 'Sway' from your display manager"
 echo ""
 echo "Keybinds: Super+Enter (terminal), Super+d (launcher), Super+/ (cheatsheet)"

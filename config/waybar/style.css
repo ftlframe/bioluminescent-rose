@@ -1,6 +1,6 @@
 /*
- * Bioluminescent Rose dual-bar waybar theme — pill modules on transparent bg
- * Palette: #000000 | #191724 | #ff8fb1 | #e0def4 | #ffcfdf
+ * Lain dual-bar waybar theme — pill modules on transparent bg
+ * Palette: #000000 | #282839 | #e76f8b | #e0b2a5 | #ff7a99
  */
 
 /* Global Styles */
@@ -50,7 +50,7 @@ tooltip {
 
 menu label,
 tooltip label {
-    color: #e0def4;
+    color: #e0b2a5;
 }
 
 /* === PILL MODULE STYLES === */
@@ -71,12 +71,12 @@ tooltip label {
     background-color: rgba(0, 0, 0, 1);
     border-radius: 300px;
     padding: 0px 15px;
-    color: #ff8fb1;
+    color: #e76f8b;
 }
 
 /* === WORKSPACES === */
 #workspaces button {
-    color: #ff8fb1;
+    color: #e76f8b;
     background: transparent;
     font-weight: bolder;
     box-shadow: inset 0 -3px transparent;
@@ -88,34 +88,34 @@ tooltip label {
 #workspaces button.active {
     color: black;
     border-bottom: 2px solid transparent;
-    border-image: linear-gradient(70deg, #ffcfdf, #ff8fb1) 1;
+    border-image: linear-gradient(70deg, #e0b2a5, #e76f8b) 1;
     padding: 0 3px 0 2px;
     margin-left: 4px;
     margin-right: 9px;
 }
 
 #workspaces button.visible {
-    color: #e0def4;
+    color: #e0b2a5;
 }
 
 #workspaces button.urgent {
-    background: #eb6f92;
+    background: #e0b2a5;
     color: black;
     padding: 0px 14px 0px 11px;
     margin: 0px 3px 0px 9px;
 }
 
 #workspaces button:hover {
-    color: #e0def4;
+    color: #e0b2a5;
     background: black;
-    border: 1.7px solid #e0def4;
+    border: 1.7px solid #e0b2a5;
     border-radius: 50px;
     padding: 0 15px 0 10px;
     margin: 0 8px;
 }
 
 #workspaces:hover {
-    color: #e0def4;
+    color: #e0b2a5;
 }
 
 /* === POWER GROUP === */
@@ -125,19 +125,19 @@ tooltip label {
     background-color: rgba(0, 0, 0, 1);
     border-radius: 300px;
     padding: 0px 12px;
-    color: #e0def4;
+    color: #e0b2a5;
 }
 
 @keyframes hov {
-    from { color: #e0def4; }
-    to { color: #ff8fb1; font-size: 22px; }
+    from { color: #e0b2a5; }
+    to { color: #e76f8b; font-size: 22px; }
 }
 
 #custom-power:hover,
 #custom-lock:hover,
 #custom-logout:hover {
     animation: hov 0.1s linear 1 alternate;
-    color: #ff8fb1;
+    color: #e76f8b;
     font-size: 22px;
 }
 
@@ -156,7 +156,7 @@ tooltip label {
 /* === NETWORK === */
 #network.disconnected,
 #pulseaudio.muted {
-    color: #e0def4;
+    color: #e0b2a5;
     padding-right: 10px;
 }
 
@@ -176,13 +176,13 @@ tooltip label {
 #tray>.needs-attention {
     -gtk-icon-effect: highlight;
     padding: 0 5px;
-    background-color: #ff8fb1;
+    background-color: #e76f8b;
 }
 
 /* === BATTERY ANIMATIONS === */
 @keyframes energy {
     to {
-        background: linear-gradient(45deg, #ffcfdf, #ff8fb1);
+        background: linear-gradient(45deg, #e0b2a5, #e76f8b);
         color: black;
     }
 }
@@ -190,7 +190,7 @@ tooltip label {
 #battery.charging,
 #battery.plugged {
     color: black;
-    background: linear-gradient(45deg, #ff8fb1, #ffcfdf);
+    background: linear-gradient(45deg, #e76f8b, #e0b2a5);
 }
 
 #battery.plugged {
@@ -204,13 +204,13 @@ tooltip label {
 @keyframes blink {
     to {
         background-color: black;
-        color: #e0def4;
+        color: #e0b2a5;
     }
 }
 
 #battery.warning:not(.charging),
 #battery.critical:not(.charging) {
-    background-color: #eb6f92;
+    background-color: #e0b2a5;
     color: black;
 }
 
@@ -232,26 +232,26 @@ label:focus {
     background-color: rgba(0, 0, 0, 1);
     border-radius: 300px;
     padding: 0px 12px;
-    color: #ff8fb1;
+    color: #e76f8b;
 }
 
 /* === IDLE INHIBITOR === */
 #idle_inhibitor {
-    color: #6e6a86;
+    color: #4d4d4d;
 }
 
 #idle_inhibitor.activated {
-    color: #ff8fb1;
+    color: #e76f8b;
 }
 
 /* === WEATHER === */
 #custom-weather {
-    color: #e0def4;
+    color: #e0b2a5;
 }
 
 /* === MEDIA PLAYER === */
 #custom-media {
-    background: linear-gradient(45deg, #ff8fb1, #ffcfdf);
+    background: linear-gradient(45deg, #e76f8b, #e0b2a5);
     border-radius: 300px;
     padding: 0px 17px;
     color: black;
