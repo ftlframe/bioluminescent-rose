@@ -1,0 +1,12 @@
+/**
+ * Colors — Bioluminescent Rose
+ **/
+
+* {
+    background:     #000000FF;
+    background-alt: #191724FF;
+    border:         #ff8fb1;
+    selected:       #e0def4;
+    active:         #ffcfdf;
+    urgent:         #eb6f92;
+}

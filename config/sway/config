@@ -1,0 +1,220 @@
+# Bioluminescent Rose — Sway config (stock sway, no swayfx)
+
+exec export XDG_CURRENT_DESKTOP=sway
+exec export EDITOR=nvim
+exec export VISUAL=nvim
+exec export SUDO_EDITOR=nvim
+
+font pango:JetBrainsMono Nerd Font 10
+
+# Autostart
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id sh -c 'eval $(gnome-keyring-daemon --login) eval $(gnome-keyring-daemon --start --components=secrets,ssh) export SSH_AUTH_SOCK'
+exec --no-startup-id eval $(gnome-keyring-daemon --start --components=secrets,pkcs11)
+exec --no-startup-id export SSH_AUTH_SOCK
+exec nm-applet
+exec swaync
+exec_always autotiling
+exec clipse -listen
+
+### Variables
+set $mod Mod4
+set $left h
+set $down j
+set $up k
+set $right l
+set $term ghostty
+set $menu rofi -show drun
+set $file_explorer ghostty -e ranger
+
+# Gaps and borders
+gaps inner 8px
+gaps outer 4px
+default_border pixel 2px
+default_floating_border pixel 2px
+
+# Portal and D-Bus
+exec systemctl --user start xdg-desktop-portal-wlr
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+# Window rules
+for_window [title="clipse"] floating enable, border pixel 2
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="blueman-manager"] floating enable
+for_window [app_id="nm-connection-editor"] floating enable
+for_window [app_id="gnome-calculator"] floating enable
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+
+# Border colors (Bioluminescent Rose)
+#                        border    bg       text      ind       child border
+client.focused          #ff8fb1  #000000  #e0def4  #ff8fb1  #ff8fb1
+client.focused_inactive #191724  #000000  #e0def4  #191724  #191724
+client.unfocused        #191724  #000000  #6e6a86  #191724  #191724
+client.urgent           #eb6f92  #000000  #e0def4  #eb6f92  #eb6f92
+client.placeholder      #191724  #000000  #e0def4  #191724  #191724
+
+### Output
+output * bg "$HOME/Pictures/wallpapers/flower.jpg" fill
+include ~/.config/sway/displays.conf
+
+# Focus workspace 1 on startup
+exec swaymsg workspace 1
+
+### Idle
+exec swayidle -w \
+    timeout 300 'swaylock -f' \
+    timeout 600 'swaymsg "output * power off"' \
+    resume 'swaymsg "output * power on"' \
+    before-sleep 'swaylock -f'
+
+### Input
+input "type:pointer" {
+    accel_profile "flat"
+    pointer_accel 0.1
+}
+
+input type:keyboard {
+    xkb_layout "us,rs(latin)"
+    xkb_options "grp:alt_shift_toggle"
+}
+
+### Key bindings
+    bindsym $mod+Return exec $term
+    bindsym $mod+q kill
+    bindsym $mod+d exec $menu
+    bindsym $mod+p exec wlogout
+    bindsym $mod+n exec swaync-client -t
+    bindsym $mod+Shift+n exec swaync-client -C
+    bindsym $mod+c exec pkill clipse || ghostty --title=clipse -e clipse
+    bindsym $mod+e exec $file_explorer
+    bindsym $mod+slash exec ~/.config/sway/keybinds.sh
+    bindsym $mod+Shift+c reload
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    # Screenshot
+    bindsym Print exec flameshot gui
+
+    floating_modifier $mod normal
+
+# Navigation
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+
+# Workspaces
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+
+    bindsym $mod+bracketleft workspace prev_on_output
+    bindsym $mod+bracketright workspace next_on_output
+
+    # Mouse side buttons for workspace switching
+    bindsym --whole-window button8 workspace prev_on_output
+    bindsym --whole-window button9 workspace next_on_output
+
+    # Mod + scroll wheel for workspace switching
+    bindsym --whole-window $mod+button4 workspace prev_on_output
+    bindsym --whole-window $mod+button5 workspace next_on_output
+
+    # Quick toggle between last two workspaces
+    workspace_auto_back_and_forth yes
+    bindsym $mod+x workspace back_and_forth
+
+# App-to-workspace assignments
+assign [app_id="app.zen_browser.zen"] workspace 6
+assign [app_id="equibop"] workspace 8
+assign [app_id="io.github.kukuruzka165.materialgram"] workspace 9
+
+# Layout
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+t layout toggle split
+    bindsym $mod+f fullscreen
+    bindsym $mod+Shift+space floating toggle
+    bindsym $mod+space focus mode_toggle
+    bindsym $mod+a focus parent
+
+# Scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+minus scratchpad show
+
+# Resize mode
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Vim-style resize (no mode needed)
+bindsym $mod+Ctrl+h resize shrink width 30px
+bindsym $mod+Ctrl+j resize grow height 30px
+bindsym $mod+Ctrl+k resize shrink height 30px
+bindsym $mod+Ctrl+l resize grow width 30px
+
+# Fast resize
+bindsym $mod+Ctrl+Shift+h resize shrink width 100px
+bindsym $mod+Ctrl+Shift+j resize grow height 100px
+bindsym $mod+Ctrl+Shift+k resize shrink height 100px
+bindsym $mod+Ctrl+Shift+l resize grow width 100px
+
+# Media keys
+    bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+    bindsym --locked XF86AudioRaiseVolume exec ~/.config/sway/volume-up.sh
+    bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+    bindsym --locked XF86AudioPlay exec playerctl play-pause
+    bindsym --locked XF86AudioNext exec playerctl next
+    bindsym --locked XF86AudioPrev exec playerctl previous
+
+# Waybar
+exec_always bash -c 'killall waybar 2>/dev/null; sleep 0.3; waybar &'
+
+include /etc/sway/config.d/*

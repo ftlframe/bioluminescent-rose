@@ -1,0 +1,259 @@
+/*
+ * Bioluminescent Rose dual-bar waybar theme — pill modules on transparent bg
+ * Palette: #000000 | #191724 | #ff8fb1 | #e0def4 | #ffcfdf
+ */
+
+/* Global Styles */
+* {
+    border: none;
+    border-radius: 60px;
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", "Font Awesome 6 Brands";
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 0px;
+    margin: 1px 0px;
+    padding: 0.5px 0px;
+}
+
+.module {
+    padding: 0px 10px;
+    margin: 1px 1px;
+}
+
+.modules-left>widget:first-child .module {
+    margin-left: 5px;
+}
+
+.modules-right>widget:last-child .module {
+    margin-right: 5px;
+}
+
+/* Window — transparent background */
+window#waybar {
+    background-color: transparent;
+    color: black;
+    transition: background-color 0.5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* Tooltip */
+menu,
+tooltip {
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 7px;
+    border: 0px transparent;
+    padding: 5px;
+}
+
+menu label,
+tooltip label {
+    color: #e0def4;
+}
+
+/* === PILL MODULE STYLES === */
+#language,
+#custom-tray-hide,
+#custom-weather,
+#cpu,
+#idle_inhibitor,
+#bluetooth,
+#memory,
+#battery,
+#custom-dnd,
+#custom-smallnc,
+#clock,
+#network,
+#pulseaudio,
+#workspaces {
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 300px;
+    padding: 0px 15px;
+    color: #ff8fb1;
+}
+
+/* === WORKSPACES === */
+#workspaces button {
+    color: #ff8fb1;
+    background: transparent;
+    font-weight: bolder;
+    box-shadow: inset 0 -3px transparent;
+    transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    padding: 0 14px 0 6px;
+}
+
+#workspaces button.focused,
+#workspaces button.active {
+    color: black;
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(70deg, #ffcfdf, #ff8fb1) 1;
+    padding: 0 3px 0 2px;
+    margin-left: 4px;
+    margin-right: 9px;
+}
+
+#workspaces button.visible {
+    color: #e0def4;
+}
+
+#workspaces button.urgent {
+    background: #eb6f92;
+    color: black;
+    padding: 0px 14px 0px 11px;
+    margin: 0px 3px 0px 9px;
+}
+
+#workspaces button:hover {
+    color: #e0def4;
+    background: black;
+    border: 1.7px solid #e0def4;
+    border-radius: 50px;
+    padding: 0 15px 0 10px;
+    margin: 0 8px;
+}
+
+#workspaces:hover {
+    color: #e0def4;
+}
+
+/* === POWER GROUP === */
+#custom-power,
+#custom-lock,
+#custom-logout {
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 300px;
+    padding: 0px 12px;
+    color: #e0def4;
+}
+
+@keyframes hov {
+    from { color: #e0def4; }
+    to { color: #ff8fb1; font-size: 22px; }
+}
+
+#custom-power:hover,
+#custom-lock:hover,
+#custom-logout:hover {
+    animation: hov 0.1s linear 1 alternate;
+    color: #ff8fb1;
+    font-size: 22px;
+}
+
+/* === PERFORMANCE GROUP === */
+#cpu {
+    padding-left: 12px;
+    padding-right: 14px;
+}
+
+#performance {
+    padding-top: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* === NETWORK === */
+#network.disconnected,
+#pulseaudio.muted {
+    color: #e0def4;
+    padding-right: 10px;
+}
+
+/* === TRAY === */
+#custom-tray-hide {
+    padding-right: 18px;
+}
+
+#tray {
+    background-color: black;
+}
+
+#tray>.passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray>.needs-attention {
+    -gtk-icon-effect: highlight;
+    padding: 0 5px;
+    background-color: #ff8fb1;
+}
+
+/* === BATTERY ANIMATIONS === */
+@keyframes energy {
+    to {
+        background: linear-gradient(45deg, #ffcfdf, #ff8fb1);
+        color: black;
+    }
+}
+
+#battery.charging,
+#battery.plugged {
+    color: black;
+    background: linear-gradient(45deg, #ff8fb1, #ffcfdf);
+}
+
+#battery.plugged {
+    animation: energy 0.6s linear infinite alternate;
+}
+
+#battery.charging {
+    animation: energy 0.6s linear infinite alternate;
+}
+
+@keyframes blink {
+    to {
+        background-color: black;
+        color: #e0def4;
+    }
+}
+
+#battery.warning:not(.charging),
+#battery.critical:not(.charging) {
+    background-color: #eb6f92;
+    color: black;
+}
+
+#battery.warning:not(.charging) {
+    animation: blink 1s linear infinite alternate;
+}
+
+#battery.critical:not(.charging) {
+    animation: blink 0.5s linear infinite alternate;
+}
+
+/* === MISC === */
+label:focus {
+    background-color: black;
+}
+
+#custom-dnd,
+#custom-smallnc {
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 300px;
+    padding: 0px 12px;
+    color: #ff8fb1;
+}
+
+/* === IDLE INHIBITOR === */
+#idle_inhibitor {
+    color: #6e6a86;
+}
+
+#idle_inhibitor.activated {
+    color: #ff8fb1;
+}
+
+/* === WEATHER === */
+#custom-weather {
+    color: #e0def4;
+}
+
+/* === MEDIA PLAYER === */
+#custom-media {
+    background: linear-gradient(45deg, #ff8fb1, #ffcfdf);
+    border-radius: 300px;
+    padding: 0px 17px;
+    color: black;
+    font-weight: bold;
+}

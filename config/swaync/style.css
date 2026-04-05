@@ -1,0 +1,106 @@
+/* --- swaync Bioluminescent Rose Theme --- */
+
+@define-color background #000000;
+@define-color foreground #e0def4;
+@define-color accent #ff8fb1;
+@define-color secondary #ffcfdf;
+@define-color surface #191724;
+@define-color surface-alt #403d52;
+@define-color muted #6e6a86;
+@define-color red #eb6f92;
+@define-color iris #c4a7e7;
+
+/* Main Notification Center Window */
+.control-center {
+    background-color: alpha(@background, 0.92);
+    border: 2px solid @accent;
+    border-radius: 14px;
+    font-family: "JetBrains Mono Nerd Font";
+}
+
+/* "No Notifications" Label */
+.widget-label {
+    color: @muted;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px;
+}
+
+/* Individual Notification Pop-up */
+.notification {
+    background-color: alpha(@surface, 0.95);
+    border: 1px solid @surface-alt;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 6px 10px;
+}
+
+.notification-content {
+    padding: 5px;
+}
+
+/* Notification Title */
+.title {
+    font-size: 14px;
+    font-weight: bold;
+    color: @accent;
+}
+
+/* Notification Body */
+.body {
+    font-size: 13px;
+    color: @foreground;
+}
+
+/* Close Button */
+.close-button {
+    background-color: transparent;
+    color: @muted;
+    border-radius: 8px;
+    padding: 2px;
+    margin: 5px;
+}
+.close-button:hover {
+    background-color: @surface-alt;
+    color: @red;
+}
+
+/* Buttons inside notifications */
+.notification-button {
+    background-color: @surface-alt;
+    color: @foreground;
+    border-radius: 8px;
+    padding: 4px 8px;
+    margin: 5px;
+    font-weight: bold;
+}
+.notification-button:hover {
+    background-color: @accent;
+    color: @background;
+}
+
+/* Summary text in control center */
+.summary {
+    color: @foreground;
+    font-weight: bold;
+}
+
+/* Time label */
+.time {
+    color: @muted;
+    font-size: 12px;
+}
+
+/* DND toggle */
+.widget-dnd {
+    margin: 10px;
+}
+
+.widget-dnd > switch {
+    background-color: @surface-alt;
+    border-radius: 8px;
+}
+
+.widget-dnd > switch:checked {
+    background-color: @accent;
+}
