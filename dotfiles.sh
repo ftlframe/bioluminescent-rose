@@ -40,10 +40,18 @@ if [ "$PKG_MGR" = "apt" ]; then
         grim slurp wl-clipboard \
         eza \
         jq \
-        autotiling \
         blueman \
         network-manager-gnome \
         flameshot
+
+    # autotiling — Python package, not in apt
+    if ! command -v autotiling &>/dev/null; then
+        if command -v pip3 &>/dev/null; then
+            pip3 install --user autotiling
+        else
+            echo "NOTE: Install autotiling manually: pip3 install autotiling"
+        fi
+    fi
 
     # clipse — not in Ubuntu repos, install from GitHub release
     if ! command -v clipse &>/dev/null; then
